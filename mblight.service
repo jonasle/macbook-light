@@ -3,7 +3,7 @@ Description=Service to automatically manipulate the keyboard- and screenbackligh
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/kbsd
+ExecStart=/usr/bin/mblight
 
 [Install]
 WantedBy=multi-user.target
