@@ -16,6 +16,10 @@ screen_max=1808
 kb_mindiff=10
 screen_mindiff=50
 
+if [ "$1" = "--now" ]; then
+	__oneshot=1
+fi
+
 __calclight()
 {
 	light=$1; shift
@@ -64,6 +68,10 @@ while true; do
 	debuginfo=$(__setlight $screenlightval $kblightval)
 	if [ $__debug ]
 		then printf "$debuginfo\\n"
+	fi
+	if [ $__oneshot ]; then
+		printf "Measured %s light value, setting keyboard backlight to %s and screen to %s, exiting...\\n" $light $kblightval $screenlightval 
+		exit 0
 	fi
 	sleep 1
 done
