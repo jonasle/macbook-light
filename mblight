@@ -16,10 +16,13 @@ screen_max=1808
 kb_mindiff=10
 screen_mindiff=50
 
-if [ "$1" = "--now" ]; then
-	__oneshot=1
-fi
-
+for arg; do
+	if [ "$arg" = '--now' ]; then
+		__oneshot=1
+	elif [ "$arg" = '--debug' ]; then
+		__debug=1
+	fi
+done
 __calclight()
 {
 	light=$1; shift
@@ -57,17 +60,20 @@ __setlight()
 
 while true; do
 	light=$(sed 's/^(\(.*\),.*)/\1/' "$lightsensor")
+	if [ $__debug ]; then
+		printf "measured light: %s\\n" $light
+	fi
 	kblightval=$(__calclight $light $kb_max)
-	if [ $__debug ] 
-		then printf "kblightval: %s\\n" $kblightval
+	if [ $__debug ]; then 
+		printf "kblightval: %s\\n" $kblightval
 	fi
 	screenlightval=$(__calclight $light $screen_max)
-	if [ $__debug ]
-		then printf "screenlightval: %s\\n" $screenlightval
+	if [ $__debug ]; then
+		printf "screenlightval: %s\\n" $screenlightval
 	fi
 	debuginfo=$(__setlight $screenlightval $kblightval)
-	if [ $__debug ]
-		then printf "$debuginfo\\n"
+	if [ $__debug ]; then
+		printf "$debuginfo\\n"
 	fi
 	if [ $__oneshot ]; then
 		printf "Measured %s light value, setting keyboard backlight to %s and screen to %s, exiting...\\n" $light $kblightval $screenlightval 
