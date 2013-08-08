@@ -1,6 +1,6 @@
 #!/bin/sh
 
-__debug=1
+__debug=
 
 lightsensor="/sys/bus/platform/drivers/applesmc/applesmc.768/light"
 kblight="/sys/bus/platform/drivers/applesmc/applesmc.768/leds/smc::kbd_backlight/brightness"
@@ -54,9 +54,16 @@ __setlight()
 while true; do
 	light=$(sed 's/^(\(.*\),.*)/\1/' "$lightsensor")
 	kblightval=$(__calclight $light $kb_max)
-	printf "kblightval: %s\\n" $kblightval
+	if [ $__debug ] 
+		then printf "kblightval: %s\\n" $kblightval
+	fi
 	screenlightval=$(__calclight $light $screen_max)
-	printf "screenlightval: %s\\n" $screenlightval
-	echo $(__setlight $screenlightval $kblightval)
+	if [ $__debug ]
+		then printf "screenlightval: %s\\n" $screenlightval
+	fi
+	debuginfo=$(__setlight $screenlightval $kblightval)
+	if [ $__debug ]
+		then printf "$debuginfo\\n"
+	fi
 	sleep 1
 done
