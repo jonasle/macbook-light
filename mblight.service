@@ -1,0 +1,9 @@
+[Unit]
+Description=Service to automatically manipulate the keyboard- and screenbacklight of a Macbook
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/kbsd
+
+[Install]
+WantedBy=multi-user.target
