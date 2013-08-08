@@ -16,30 +16,6 @@ screen_max=1808
 kb_diff=10
 screen_diff=50
 
-
-__kblight()
-{
-	lv=$1; shift
-	if [ $light_max -eq $kb_max ]; then
-		retval=$(($kb_max - $lv))
-	else
-		lv=$(($lv * $kb_max / $light_max))
-	fi
-	echo $retval
-}
-
-__screenlight()
-{
-	lv=$1; shift
-	if [ $light_max -eq $screen_max ]; then
-		retval=$(($screen_max - $lv))
-	else
-		lv=$(($lv * $screen_max / $light_max))
-	  retval=$(($screen_max - $lv))
-	fi
-	echo $retval
-}
-
 __calclight()
 {
 
