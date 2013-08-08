@@ -10,7 +10,7 @@ arch=('any')
 depends=('bash')
 makedepends=('git')
 
-_gitroot=git@github.com:jonasle/macbook-light.git
+_gitroot=https://github.com/jonasle/macbook-light.git
 _gitname=macbook-light
 
 build()
