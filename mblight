@@ -1,24 +1,23 @@
 #!/bin/sh
 
-
+__debug=1
 
 lightsensor="/sys/bus/platform/drivers/applesmc/applesmc.768/light"
 kblight="/sys/bus/platform/drivers/applesmc/applesmc.768/leds/smc::kbd_backlight/brightness"
-screenlight="/dev/null"
+screenlight="/sys/class/backlight/intel_backlight/brightness"
 
 
-### Defines for sensor behaviour
+### Variables defining behaviour
 # Maximum values
 light_max=255
 kb_max=255
 screen_max=1808
 # Noticable differences
-kb_diff=10
-screen_diff=50
+kb_mindiff=10
+screen_mindiff=50
 
 __calclight()
 {
-
 	light=$1; shift
 	maxval=$1; shift
 	if [ $light_max -ne $maxval ]; then
@@ -28,6 +27,29 @@ __calclight()
 	echo $retval
 }
 
+__setlight()
+{
+	screenval=$1; shift
+	kbval=$1; shift
+  
+	oldscreenval=$(cat "$screenlight")
+	screendiff=$(($oldscreenval - $screenval))
+	screendiff=${screendiff#-}
+	if [ $screendiff -gt $screen_mindiff ]; then
+		echo $screenval > $screenlight
+	elif [ $__debug ]; then
+    printf "Not manipulating screen backlight, difference is too small\\n"
+	fi
+
+	oldkbval=$(cat "$kblight")
+	kbdiff=$(($oldkbval - $kbval))
+	kbdiff=${kbdiff#-}
+	if [ $kbdiff -gt $kb_mindiff ]; then
+		echo $kbval > $kblight
+	elif [ $__debug ]; then
+		printf "Not manipulating keyboard backlight, difference is too small\\n"
+	fi
+}
 
 while true; do
 	light=$(sed 's/^(\(.*\),.*)/\1/' "$lightsensor")
@@ -35,5 +57,6 @@ while true; do
 	printf "kblightval: %s\\n" $kblightval
 	screenlightval=$(__calclight $light $screen_max)
 	printf "screenlightval: %s\\n" $screenlightval
+	echo $(__setlight $screenlightval $kblightval)
 	sleep 1
 done
