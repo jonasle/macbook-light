@@ -6,8 +6,8 @@ pkgrel=1
 pkgdesc='Setup keyboard- and screenbacklight using the light sensor of a Macbook'
 url='https://github.com/jonasle/macbook-light'
 license=('GPL')
-arch=('i686' 'x86_64')
-depends=()
+arch=('any')
+depends=('bash')
 makedepends=('git')
 
 _gitroot=git@github.com:jonasle/macbook-light.git
@@ -19,7 +19,7 @@ build()
 
 	msg "Connecting to git server"
 
-	if [ -d $startdir/src/$_gitname ] ; then
+	if [ -d $srcdir/$_gitname ] ; then
 		cd $_gitname && git pull origin
 		msg "The local files are updated."
 	else
