@@ -25,10 +25,12 @@ build()
 	else
 	  git clone $_gitroot
 	fi
+}
 
+package()
+{	
 	cd "$srcdir/$_gitname"
 
-	install -Dm 755 $srcdir/$_gitname/$pkgname ${pkgdir}/usr/bin/$pkgname
-	install -Dm 755 $srcdir/$_gitname/${pkgname}.service /etc/systemd/system/${pkgname}.service
-
+	install -Dm 755 $srcdir/$_gitname/$pkgname $pkgdir/usr/bin/$pkgname
+	install -Dm 755 $srcdir/$_gitname/${pkgname}.service $pkgdir/etc/systemd/system/${pkgname}.service
 }
