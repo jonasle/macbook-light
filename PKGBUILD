@@ -2,7 +2,7 @@
 
 pkgname=mblight
 pkgver=0.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Setup keyboard- and screenbacklight using the light sensor of a Macbook'
 url='https://github.com/jonasle/macbook-light'
 license=('GPLv2')

@@ -37,10 +37,14 @@ __calclight()
 {
 	light=$1; shift
 	maxval=$1; shift
+	inverted=$1; shift
 	if [ $light_max -ne $maxval ]; then
 		light=$(($light * $maxval / $light_max))
 	fi
 	retval=$(($maxval - $light))
+	if [ $inverted -gt 0 ]; then
+		retval=$(($light))
+	fi
 	echo $retval
 }
 
@@ -80,11 +84,11 @@ while true; do
 	if [ $__debug ]; then
 		printf "measured light: %s\\n" $light
 	fi
-	kblightval=$(__calclight $light $kb_max)
+	kblightval=$(__calclight $light $kb_max 0)
 	if [ $__debug ]; then 
 		printf "kblightval: %s\\n" $kblightval
 	fi
-	screenlightval=$(__calclight $light $screen_max)
+	screenlightval=$(__calclight $light $screen_max 1)
 	if [ $__debug ]; then
 		printf "screenlightval: %s\\n" $screenlightval
 	fi
