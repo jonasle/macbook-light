@@ -5,7 +5,8 @@ __debug=
 lightsensor="/sys/bus/platform/drivers/applesmc/applesmc.768/light"
 kblight="/sys/bus/platform/drivers/applesmc/applesmc.768/leds/smc::kbd_backlight/brightness"
 screenlight="/sys/class/backlight/intel_backlight/brightness"
-
+adaptor="/sys/class/power_supply/ADP1/online"
+battery="/sys/class/power_supply/BAT0/"
 
 ### Variables defining behaviour
 # Maximum values
@@ -15,6 +16,15 @@ screen_max=1808
 # Noticable differences
 kb_mindiff=10
 screen_mindiff=50
+
+### Set correct variables for battery checking
+if [ -f "${battery}energy_now" ]; then
+	max_bat=$(cat "${battery}energy_full")
+	battery="${battery}energy_now"
+else
+	max_bat=$(cat "${battery}charge_full")
+	battery="${battery}charge_now"
+fi
 
 for arg; do
 	if [ "$arg" = '--now' ]; then
@@ -45,7 +55,7 @@ __setlight()
 	if [ $screendiff -gt $screen_mindiff ]; then
 		echo $screenval > $screenlight
 	elif [ $__debug ]; then
-    printf "Not manipulating screen backlight, difference is too small\\n"
+    	printf "Not manipulating screen backlight, difference is too small\\n"
 	fi
 
 	oldkbval=$(cat "$kblight")
@@ -56,6 +66,13 @@ __setlight()
 	elif [ $__debug ]; then
 		printf "Not manipulating keyboard backlight, difference is too small\\n"
 	fi
+}
+
+__checkbatt()
+{
+	remaining_bat=$(cat "$battery")
+	charge=$(($remaining_bat * 100 / $max_bat))
+	echo $charge
 }
 
 while true; do
