@@ -41,4 +41,4 @@ Check the issue list at: https://github.com/jonasle/macbook-light/issues?state=o
 - [ ] Power management
 - [ ] Allow manual setting of backlight
 - [ ] Logging ?
-- [ ] Allow one-time setting to remove the need to use Ctrl-C to kill the process after setting
+- [x] Allow one-time setting to remove the need to use Ctrl-C to kill the process after setting
